@@ -8,7 +8,7 @@ import re
 def load_embedding(filename):
     df = pd.read_csv(filename)
     first_row = df.iloc[0]
-    embedding_list = first_row['embedding'].split(',')
+    embedding_list = first_row['features'].split(',')
     embedding_array = np.array([float(value) for value in embedding_list])
     return embedding_array
 
@@ -23,17 +23,17 @@ def load_embeddings_and_filenames(filename):
     embeddings = np.array(embeddings)
 
     # Return a dictionary with filenames and embeddings
-    return {"filenames": df['filename'].to_numpy(), "embeddings": embeddings}
+    return {"image_path": df['image_path'].to_numpy(), "features": embeddings}
 
 
 def linear_nn_search(reference_features_filepath, dataset_features_filepath):
     img_features = load_embedding(reference_features_filepath)
     dataset_features = load_embeddings_and_filenames(dataset_features_filepath)
     distances = np.linalg.norm(
-        dataset_features['embeddings'] - img_features, axis=1)
+        dataset_features['features'] - img_features, axis=1)
     sorted_indices = np.argsort(distances)
-    image_paths = dataset_features['filenames'][sorted_indices]
-    return image_paths
+    sorted_image_paths = dataset_features['image_path'][sorted_indices]
+    return sorted_image_paths
 
 
 def add_base_path_to_image_paths(image_filenames, raw_filepath):
