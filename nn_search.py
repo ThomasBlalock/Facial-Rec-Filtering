@@ -31,7 +31,7 @@ def load_clusters(clusts_filepath):
     return centroids, image_paths
 
 
-def find_closest_cluster(img_feat_filepath, clusts_filepath):
+def nn_search(img_feat_filepath, clusts_filepath):
     img_features = load_img_features(img_feat_filepath)
     centroids, image_paths = load_clusters(clusts_filepath)
 

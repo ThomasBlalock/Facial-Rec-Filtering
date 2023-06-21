@@ -1,16 +1,14 @@
 import os
 from feature_extraction import extract_features
 from crop_faces import get_faces
-from k_means_clustering import k_means_clustering, plot_dist_by_clust
 
 # main.py will go through the entire pre-UI process of clustering and booting the
 # clusters and centroids to a file located in clustered_folder_path defined below
 
 # Folder Paths
-raw_folder_path = 'C:/Users/C25Thomas.Blalock/Coding/Image_Web_Guyvre_Data/raw'
-face_folder_path = 'C:/Users/C25Thomas.Blalock/Coding/Image_Web_Guyvre_Data/face'
-features_folder_path = 'C:/Users/C25Thomas.Blalock/Coding/Image_Web_Guyvre_Data'
-clustered_folder_path = 'C:/Users/C25Thomas.Blalock/Coding/Image_Web_Guyvre_Data/clusters.csv'
+raw_folder_path = 'C:/Users/C25Thomas.Blalock/Datasets/facial-rec-filtering-data/test_images'
+face_folder_path = 'C:/Users/C25Thomas.Blalock/Datasets/facial-rec-filtering-data/faces'
+features_folder_path = 'C:/Users/C25Thomas.Blalock/Datasets/facial-rec-filtering-data'
 
 
 # Crop faces (Comment out when not in use)
