@@ -5,55 +5,83 @@ import os
 import re
 
 
-def load_img_features(img_feat_filepath):
-    data = pd.read_csv(img_feat_filepath)
-    features = data['features'].values[0]
-    img_features = np.fromstring(features, sep=',')
-    return img_features
+def load_embedding(filename):
+    df = pd.read_csv(filename)
+    first_row = df.iloc[0]
+    embedding_list = first_row['embedding'].split(',')
+    embedding_array = np.array([float(value) for value in embedding_list])
+    return embedding_array
 
 
-def load_clusters(clusts_filepath):
-    centroids = []
-    image_paths = []
+def load_embeddings_and_filenames(filename):
+    df = pd.read_csv(filename)
+    embeddings = []
+    for index, row in df.iterrows():
+        embedding_list = row['features'].split(',')
+        embedding_array = np.array([float(value) for value in embedding_list])
+        embeddings.append(embedding_array)
+    embeddings = np.array(embeddings)
 
-    with open(clusts_filepath, 'r') as f:
-        for line in f:
-            row = line.strip().split(',')
-            centroid_start_idx = row.index('|||') + 1
-            centroid_end_idx = row.index('|||', centroid_start_idx)
-            centroid_str = ','.join(row[centroid_start_idx:centroid_end_idx])
-            centroid = np.fromstring(centroid_str, sep=',')
-            centroids.append(centroid)
-
-            img_paths = row[centroid_end_idx + 1:]
-            image_paths.append(img_paths)
-
-    return centroids, image_paths
+    # Return a dictionary with filenames and embeddings
+    return {"filenames": df['filename'].to_numpy(), "embeddings": embeddings}
 
 
-def nn_search(img_feat_filepath, clusts_filepath):
-    img_features = load_img_features(img_feat_filepath)
-    centroids, image_paths = load_clusters(clusts_filepath)
-
-    min_distance = float('inf')
-    closest_cluster_idx = -1
-
-    for i, centroid in enumerate(centroids):
-        distance = euclidean(img_features, centroid)
-        if distance < min_distance:
-            min_distance = distance
-            closest_cluster_idx = i
-
-    return closest_cluster_idx, image_paths[closest_cluster_idx]
+def linear_nn_search(reference_features_filepath, dataset_features_filepath):
+    img_features = load_embedding(reference_features_filepath)
+    dataset_features = load_embeddings_and_filenames(dataset_features_filepath)
+    distances = np.linalg.norm(
+        dataset_features['embeddings'] - img_features, axis=1)
+    sorted_indices = np.argsort(distances)
+    image_paths = dataset_features['filenames'][sorted_indices]
+    return image_paths
 
 
 def add_base_path_to_image_paths(image_filenames, raw_filepath):
     full_image_paths = []
     for img_path in image_filenames:
         # Remove the extra part and replace it with .jpg
-        # new_img_path = img_path  # comment out when not using faces
-        # comment this out to output matched faces
+        new_img_path = img_path  # comment out when not using faces
         new_img_path = re.sub(r'_face\d+', '', img_path)
         full_path = os.path.join(raw_filepath, new_img_path).replace("\\", "/")
         full_image_paths.append(full_path)
     return full_image_paths
+
+
+# # HNSW NN Search---------------------------------------------------------------
+# import hnswlib
+
+# def create_index_and_save(embeddings, index_filename):
+#     # Initialize a new index
+#     dim = embeddings.shape[1]
+#     num_elements = embeddings.shape[0]
+#     p = hnswlib.Index(space='l2', dim=dim)
+
+#     # Build the index with the embeddings
+#     p.init_index(max_elements=num_elements, ef_construction=200, M=16)
+
+#     # Add the embeddings to the index
+#     p.add_items(embeddings)
+
+#     # Save the index to disk
+#     p.save_index(index_filename)
+
+
+# def search_index(query, index_filename, num_neighbors):
+#     # Load the index from disk
+#     p = hnswlib.Index(space='l2', dim=query.shape[0])
+#     p.load_index(index_filename, max_elements=50000)
+
+#     # Use the index to perform a knn search
+#     labels, distances = p.knn_query(query, k=num_neighbors)
+
+#     return labels, distances
+
+# # Example Usage---------------------------------------------------------------
+
+# # Create and save the index
+# embeddings = load_embeddings_and_filenames('my_dataset.csv')['embeddings']
+# create_index_and_save(embeddings, 'my_index.bin')
+
+# # Load the index and perform a search
+# query = load_embedding('my_query.csv')
+# labels, distances = search_index(query, 'my_index.bin', num_neighbors=5)

@@ -1,6 +1,6 @@
 from feature_extraction import extract_features
 from crop_faces import get_faces
-from nn_search import nn_search, add_base_path_to_image_paths
+from nn_search import linear_nn_search, add_base_path_to_image_paths
 from print_cluster import copy_images_to_destination
 
 
@@ -10,7 +10,7 @@ def find_nearest_cluster(folder_path, clusts_filepath, raw_filepath, output_file
 
     extract_features(folder_path+"/face", folder_path)
 
-    idx, filepaths = nn_search(
+    filepaths = linear_nn_search(
         folder_path+"/features.csv", clusts_filepath+"/clusters.csv")
 
     complete_filepaths = add_base_path_to_image_paths(filepaths, raw_filepath)
