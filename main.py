@@ -13,21 +13,10 @@ features_folder_path = 'C:/Users/C25Thomas.Blalock/Coding/Image_Web_Guyvre_Data'
 clustered_folder_path = 'C:/Users/C25Thomas.Blalock/Coding/Image_Web_Guyvre_Data/clusters.csv'
 
 
-# # Crop faces (Comment out when not in use)
-# print("Starting get_faces()")
-# get_faces(raw_folder_path, face_folder_path)
+# Crop faces (Comment out when not in use)
+print("Starting get_faces()")
+get_faces(raw_folder_path, face_folder_path)
 
-# # Extract features (Comment out when not in use)
-# print("Starting extract_features()")
-# extract_features(face_folder_path, features_folder_path)
-
-# # Find optimal k
-# # plot_dist_by_clust(features_file_path, max_clusters, step_size)
-# print("Starting plot_dist_by_clust()")
-# plot_dist_by_clust(features_folder_path+'/features.csv', 3000, 600)
-
-# Perform k-means clustering (Comment out when not in use)
-n_clusters = 600
-print("Starting k_means_clustering()")
-k_means_clustering(features_folder_path+'/features.csv',
-                   clustered_folder_path, n_clusters)
+# Extract features (Comment out when not in use)
+print("Starting extract_features()")
+extract_features(face_folder_path, features_folder_path)
