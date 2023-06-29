@@ -27,13 +27,24 @@ def load_embeddings_and_filenames(filename):
 
 
 def linear_nn_search(reference_features_filepath, dataset_features_filepath):
-    img_features = load_embedding(reference_features_filepath)
+    img_features = load_embeddings_and_filenames(reference_features_filepath)
     dataset_features = load_embeddings_and_filenames(dataset_features_filepath)
     distances = np.linalg.norm(
-        dataset_features['features'] - img_features, axis=1)
+        dataset_features['features'] - img_features['features'][0], axis=1)
     sorted_indices = np.argsort(distances)
     sorted_image_paths = dataset_features['image_path'][sorted_indices]
-    return sorted_image_paths
+    sorted_scores = distances[sorted_indices].tolist()
+    ref_basename = img_features['image_path'][0].split('_')
+    ref_basename = ref_basename[0] + '_' + ref_basename[1]
+    labels = []
+    for img_path in sorted_image_paths:
+        basename = img_path.split('_')
+        basename = basename[0] + '_' + basename[1]
+        if basename == ref_basename:
+            labels.append(True)
+        else:
+            labels.append(False)
+    return sorted_image_paths, sorted_scores, labels
 
 
 def add_base_path_to_image_paths(image_filenames, raw_filepath):
