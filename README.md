@@ -26,35 +26,35 @@ First, clone the Image Guyver repository to your local machine:
 ```bash
 git clone https://github.com/yourusername/image-guyver.git
 cd image-guyver
-'''
+```
 
 ### 2. Install Dependencies
 
 Ensure you have Python 3.7 or higher installed. Install the required Python packages using pip:
 
-'''bash
+```bash
 pip install numpy pandas scikit-learn tensorflow keras mtcnn
-'''
+```
 
 ### 3. Configure File Paths
 
 Update the file paths in both main.py and ui.py to match the locations of your image datasets and desired output directories.
 In main.py:
-'''Python
+```Python
 # Folder Paths
 raw_folder_path = 'path/to/your/raw_images'
 face_folder_path = 'path/to/save/cropped_faces'
 features_folder_path = 'path/to/save/features'
-'''
+```
 
 In ui.py:
-'''Python
+```Python
 dataset_features_filepath = "path/to/save/features"
 raw = "path/to/your/raw_dataset"
 
 img = "path/to/query_image"
 output = "path/to/save/output"
-'''
+```
 
 Replace path/to/... with your actual directories.
 
@@ -65,9 +65,9 @@ Run main.py to preprocess all images in your database. This script will:
 3. Cluster the feature vectors to create a vector database.
 
 Execute the script using:
-'''bash
+```bash
 python3 main.py
-'''
+```
 
 ### 5. Retrieve Images Using a Query Image
 To find and retrieve faces similar to an input query image, use ui.py. This script will:
@@ -77,9 +77,9 @@ To find and retrieve faces similar to an input query image, use ui.py. This scri
 4. (Optional) Copy the top matching images to the specified output directory.
 
 Run the script with
-'''bash
+```bash
 python3 ui.py
-'''
+```
 
 Ensure that the img variable in ui.py points to your query image and output is set to your desired output directory.
 
