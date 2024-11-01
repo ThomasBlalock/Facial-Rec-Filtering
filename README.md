@@ -1,5 +1,9 @@
 # Image Guyver
 
+By: Thomas Blalock<br>
+Date: December 6, 2023<br>
+
+## Summary
 Image Guyver is an image clustering and retrieval system designed to efficiently find specific individuals in large, unlabeled image datasets. This project aims to solve the problem of scrolling through numerous unlabeled images by clustering similar faces and allowing quick retrieval based on a query image.
 [Full Research Paper](https://drive.google.com/file/d/1jPOU6SU4mVW-ly92obYSVdtOuYMP_zlM/view?usp=sharing)
 
